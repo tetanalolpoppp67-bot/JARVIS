@@ -13,10 +13,10 @@ jobs:
 
       - name: Extract JARVIS project
         run: |
-          unzip -q JARVIS_FIXED_PROJECT.zip -d jarvis_project
+          unzip -q JARVIS_FIXED_PROJECT_V2.zip -d jarvis_project
           cp -a jarvis_project/. .
           rm -rf jarvis_project
-          rm -f JARVIS_FIXED_PROJECT.zip
+          rm -f JARVIS_FIXED_PROJECT_V2.zip
 
       - name: Java 17
         uses: actions/setup-java@v4
