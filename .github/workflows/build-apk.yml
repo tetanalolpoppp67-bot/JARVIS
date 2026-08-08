@@ -2,24 +2,20 @@ name: Build JARVIS APK
 
 on:
   workflow_dispatch:
-  push:
-    branches: ["main"]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Скачать проект
         uses: actions/checkout@v4
 
-      - name: Распаковать проект JARVIS
+      - name: Распаковать JARVIS
         run: |
-          rm -rf project
-          mkdir project
-          unzip -q JARVIS_GitHub_Actions.zip -d project
-          cp -a project/. .
-          rm -rf project
+          unzip -q JARVIS_GitHub_Actions.zip -d jarvis_project
+          cp -r jarvis_project/. .
+          rm -rf jarvis_project
           rm -f JARVIS_GitHub_Actions.zip
 
       - name: Установить Java 17
@@ -31,10 +27,10 @@ jobs:
       - name: Настроить Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Установить Android SDK 35
+      - name: Установить Android SDK
         run: |
-          yes | sdkmanager --licenses || true
-          sdkmanager "platforms;android-35" "build-tools;35.0.0"
+          sdkmanager "platforms;android-35"
+          sdkmanager "build-tools;35.0.0"
 
       - name: Установить Gradle
         uses: gradle/actions/setup-gradle@v4
@@ -44,9 +40,8 @@ jobs:
       - name: Собрать APK
         run: gradle --no-daemon :app:assembleDebug
 
-      - name: Загрузить APK
+      - name: Сохранить APK
         uses: actions/upload-artifact@v4
         with:
           name: JARVIS-APK
           path: app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
